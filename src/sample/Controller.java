@@ -128,7 +128,6 @@ public class Controller {
         typesInfoText.setText("Types given: ");
     }
     @FXML private void clearNames (ActionEvent event){
-        System.out.println(event.getSource());
         if (checkFN.isSelected()){
                 for (int i=0;i<width;i++){
                     if (names[i]==null) break;
