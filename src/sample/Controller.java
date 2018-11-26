@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
@@ -27,11 +28,9 @@ public class Controller {
     @FXML private TextField textFFA;
     @FXML private TextField widthTF;
     @FXML private TextField addColNameTF;
-    @FXML private TextArea operationResult;
     @FXML private TextArea colInfoText;
     @FXML private TextArea typesInfoText;
     @FXML private Text typesMessage;
-    @FXML private Text namesMessage;
     @FXML private Text groupbyMessage;
     @FXML private Text widthInfo;
     @FXML private CheckBox checkFN;
@@ -109,7 +108,7 @@ public class Controller {
             }
         }
         if(!flag){
-            if(names[width-1]!=null) namesMessage.setText("All names are already set!");
+            if(names[width-1]!=null) typesMessage.setText("All names are already set!");
             else typesMessage.setText("Column name not added.");
             typesMessage.setVisible(true);
         }
@@ -129,6 +128,7 @@ public class Controller {
         typesInfoText.setText("Types given: ");
     }
     @FXML private void clearNames (ActionEvent event){
+        System.out.println(event.getSource());
         if (checkFN.isSelected()){
                 for (int i=0;i<width;i++){
                     if (names[i]==null) break;
@@ -139,42 +139,16 @@ public class Controller {
         }
         else colInfoText.setText("Names given: ");
     }
-    private Class[] classGuess(File file) {
-        ArrayList<Class> classList = new ArrayList<>();
-        int a=0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            bufferedReader.readLine();
-            String[] string = bufferedReader.readLine().split(",");
-            for (int i = 0; i < string.length; i++) {
-                if(string[i].matches("^([+-]?\\d+)$")) {
-                    classList.add(IntegerValue.class);
-                    a++;
-                } else if (string[i].matches("^([+-]?\\d*\\.?\\d*)$")) {
-                    classList.add(DoubleValue.class);
-                    a++;
-                } else if (string[i].matches("^\\d{4}-\\d{2}-\\d{3}$")) {
-                    classList.add(DateTimeValue.class);
-                    a++;
-                } else {
-                    classList.add(StringValue.class);
-                    a++;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int i=0;i<a;i++){
-            System.out.println(classList.get(i));
-        }
-        return classList.toArray(new Class[a]);
-    }
+
     @FXML private void handleButton1Action (ActionEvent event) {
         try{
             boolean flag=true;
+            for (int a=0;a<width;a++){
+                if (types[a]==null) flag=false;
+            }
             if (checkFN.isSelected()) {
-                System.out.println(file.getAbsolutePath());
                 if (flag){
-                    dataF = new DataFrame(file.getAbsolutePath(), classGuess(file));
+                    dataF = new DataFrame(file.getAbsolutePath(), types);
                     typesMessage.setText("File loaded successfully");
                     typesMessage.setVisible(true);
                 }
@@ -187,7 +161,7 @@ public class Controller {
                 for (int i=0;i<width;i++) if (names[i]==null || types[i]==null) flag=false;
                 if (flag){
                     dataF = new DataFrame(file.getAbsolutePath(),
-                            classGuess(file),names);
+                            types,names);
                     typesMessage.setText("File loaded.");
                     typesMessage.setVisible(true);
                 }
@@ -206,28 +180,7 @@ public class Controller {
 
     }
     @FXML private void getMinButtonAction (ActionEvent event){
-
-        try{
-            if (dataF==null) {
-                groupbyMessage.setText("File not loaded.");
-                groupbyMessage.setVisible(true);
-            }
-            else{
-                String text = new String();
-                DataFrame temp=dataFrameGroupBy.min();
-                for (int i=0;i<=5;i++){
-                    for (int j=0; j<width;j++){
-                        if (i==0) text=text+names[j];
-                        else text=text+dataF.iloc(i-1).get(j).toString();
-                        if (j==width-1) text=text+"\n";
-                    }
-                }
-                operationResult.setText(text);
-            }
-        }
-        catch (WrongTypeInColumn e){
-            groupbyMessage.setText("Wrong type in column \""+e.getName()+"\"");
-        }
+        //FXMLLoader loader = new FXMLLoader()
     }
     @FXML private void showLoadFile (ActionEvent event){
         boolean set=false;
