@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.javafx.logging.Logger;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,11 +8,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import main.java.lab1.dataFrame.*;
 import main.java.lab1.myExceptions.WrongTypeInColumn;
 
@@ -25,6 +30,7 @@ public class Controller {
     ObservableList<String> allTypesList = FXCollections.observableArrayList(
             "DateTimeValue", "DoubleValue", "FloatValue","IntegerValue","StringValue");
     @FXML private VBox boxLoadFile;
+    @FXML private HBox namesHbox;
     @FXML private TextField textFFA;
     @FXML private TextField widthTF;
     @FXML private TextField addColNameTF;
@@ -33,6 +39,7 @@ public class Controller {
     @FXML private Text typesMessage;
     @FXML private Text groupbyMessage;
     @FXML private Text widthInfo;
+    @FXML private Text chooseFileText;
     @FXML private CheckBox checkFN;
     @FXML private CheckBox showLoadFile;
     @FXML private ChoiceBox typeCBox;
@@ -74,7 +81,8 @@ public class Controller {
     }
     @FXML private void addType (){
         boolean flag=false;
-        for (int i=0;i<width;i++){
+        int i=0;
+        for (;i<width;i++){
             if(types[i]==null) {
                 flag=true;
                 if (typeCBox.getValue()=="DateTimeValue") types[i]=DateTimeValue.class;
@@ -87,18 +95,20 @@ public class Controller {
                 break;
             }
         }
-        if (!flag) {
+        if (typeCBox.getValue()==null) typesMessage.setText("Choose a type first!");
+        else if (!flag) {
             if(width==0) typesMessage.setText("Set width first!");
             else typesMessage.setText("All types are already added!");
             typesMessage.setVisible(true);
         }
         else {
-            typesInfoText.setText(typesInfoText.getText()+typeCBox.getValue()+" ");
+            typesInfoText.setText(typesInfoText.getText()+(i+1)+"."+typeCBox.getValue()+" | ");
         }
     }
     @FXML private void addName(){
         boolean flag=false;
-        for (int i=0;i<width;i++){
+        int i=0;
+        for (;i<width;i++){
             if(names[i]==null) {
                 flag=true;
                 names[i]=addColNameTF.getText();
@@ -113,7 +123,7 @@ public class Controller {
             typesMessage.setVisible(true);
         }
         else {
-            colInfoText.setText(colInfoText.getText()+" \""+addColNameTF.getText()+"\"");
+            colInfoText.setText(colInfoText.getText()+(i+1)+" \""+addColNameTF.getText()+"\" | ");
         }
     }
     @FXML private void clearTypes (ActionEvent event){
@@ -135,8 +145,15 @@ public class Controller {
                 }
                 typesMessage.setText("Types cleared.");
             colInfoText.setText("Names in file.");
+            namesHbox.setVisible(false);
+        }
+        else if(((Control)event.getSource()).getId().toString().equals("checkFN")){
+            namesHbox.setVisible(true);
         }
         else colInfoText.setText("Names given: ");
+        for (int j=0;j<width;j++){
+            names[j]=null;
+        }
     }
 
     @FXML private void handleButton1Action (ActionEvent event) {
@@ -148,11 +165,16 @@ public class Controller {
             if (checkFN.isSelected()) {
                 if (flag){
                     dataF = new DataFrame(file.getAbsolutePath(), types);
-                    typesMessage.setText("File loaded successfully");
+                    typesMessage.setText("DataFrame created successfully");
                     typesMessage.setVisible(true);
+                    String[] temp = dataF.getColumnsNames();
+                    colInfoText.setText("Names given: ");
+                    for (int i =0;i<temp.length;i++){
+                        colInfoText.setText(colInfoText.getText()+temp[i]+" ");
+                    }
                 }
                 else{
-                    typesMessage.setText("Wrong number of type arguments. File not loaded.");
+                    typesMessage.setText("Wrong number of type arguments. DataFrame not created.");
                     typesMessage.setVisible(true);
                 }
             }
@@ -178,8 +200,38 @@ public class Controller {
         }
 
     }
-    @FXML private void getMinButtonAction (ActionEvent event){
-        //FXMLLoader loader = new FXMLLoader()
+    @FXML private void getOperationButtonAction (ActionEvent event){
+        String id = ((Control)event.getSource()).getId().toString();
+        System.out.println(id);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("operationWindow.fxml"));
+        OperationController opController = new OperationController();
+        fxmlLoader.setController(opController);
+        if (dataF!=null) opController.setDataFrame(dataF);
+        if (id.equals("minButton")) opController.setName("Min");
+        else if(id.equals("maxButton")) opController.setName("Max");
+        else if(id.equals("sumButton")) opController.setName("Sum");
+        else if(id.equals("stdButton")) opController.setName("Std");
+        else if(id.equals("meanButton")) opController.setName("Mean");
+        else if(id.equals("varButton")) opController.setName("Var");
+
+        Stage stage = new Stage();
+        Parent root = null;
+        try {
+            root=fxmlLoader.load();
+            opController.setOperationLabel("id");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle(opController.getName());
+        stage.show();
+
+
+
+
     }
     @FXML private void showLoadFile (ActionEvent event){
         boolean set=false;
@@ -194,7 +246,10 @@ public class Controller {
         chooser.setTitle("Open File");
         Node node = (Node) event.getSource();
         file =  chooser.showOpenDialog(node.getScene().getWindow());
+        chooseFileText.setText("File chosen.");
+        chooseFileText.setVisible(true);
 
     }
+
 
 }

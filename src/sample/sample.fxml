@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -19,13 +20,13 @@
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
+    <RowConstraints />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <VBox id="boxLoadFile" fx:id="boxLoadFile" prefHeight="314.0" prefWidth="400.0">
+      <VBox id="boxLoadFile" fx:id="boxLoadFile" prefHeight="314.0" prefWidth="400.0" GridPane.rowIndex="1">
          <children>
-            <Button id="fileChooserButton" fx:id="fileChooserButton" mnemonicParsing="false" onAction="#locateFile" text="Choose file" />
             <HBox prefHeight="29.0" prefWidth="400.0">
                <children>
                   <TextField id="widthTF" fx:id="widthTF" prefHeight="26.0" prefWidth="48.0" promptText="Width" />
@@ -40,27 +41,32 @@
                </children>
             </HBox>
             <CheckBox id="checkFN" fx:id="checkFN" mnemonicParsing="false" onAction="#clearNames" prefHeight="10.0" prefWidth="134.0" text="Column names in file" />
-            <Text id="typesMessage" fx:id="typesMessage" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="All types added" visible="false" wrappingWidth="357.2019271850586" />
-            <HBox prefHeight="21.0" prefWidth="400.0">
+            <HBox id="namesHbox" fx:id="namesHbox" prefHeight="21.0" prefWidth="400.0">
                <children>
                   <TextField id="addColNameTF" fx:id="addColNameTF" promptText="Column name" />
                   <Button id="addColNameB" fx:id="addColNameB" mnemonicParsing="false" onAction="#addName" text="Add column name" />
                   <Button id="clearNamesButton" fx:id="clearNamesButton" mnemonicParsing="false" onAction="#clearNames" prefHeight="26.0" prefWidth="94.0" text="Clear names" />
                </children>
             </HBox>
+            <Text id="typesMessage" fx:id="typesMessage" opacity="0.6" strokeType="OUTSIDE" strokeWidth="0.0" text="All types added" visible="false" wrappingWidth="357.2019271850586">
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
             <Button id="addDFB" fx:id="addDFB" mnemonicParsing="false" onAction="#handleButton1Action" text="Load Data Frame" />
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
          <children>
-            <CheckBox id="showLoadFile" fx:id="showLoadFile" mnemonicParsing="false" onAction="#showLoadFile" text="Show load file" />
-            <Text id="widthInfo" fx:id="widthInfo" strokeType="OUTSIDE" strokeWidth="0.0" text="Width:" />
-            <TextArea id="typesInfoText" fx:id="typesInfoText" prefHeight="77.0" prefWidth="400.0" text="Types given: " />
-            <TextArea id="colInfoText" fx:id="colInfoText" prefHeight="93.0" prefWidth="400.0" text="Names given: " />
-         </children>
-      </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-         <children>
+            <Text id="groupbyMessage" fx:id="groupbyMessage" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="399.7366886138916" />
+            <VBox prefHeight="167.0" prefWidth="408.0">
+               <children>
+                  <CheckBox id="showLoadFile" fx:id="showLoadFile" mnemonicParsing="false" onAction="#showLoadFile" text="Show load file" />
+                  <Text id="widthInfo" fx:id="widthInfo" strokeType="OUTSIDE" strokeWidth="0.0" text="Width:" />
+                  <TextArea id="typesInfoText" fx:id="typesInfoText" prefHeight="17.0" prefWidth="408.0" text="Types given: " />
+                  <TextArea id="colInfoText" fx:id="colInfoText" prefHeight="28.0" prefWidth="408.0" text="Names given: " />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="22.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="408.0" />
+               </children>
+            </VBox>
             <HBox prefHeight="29.0" prefWidth="400.0">
                <children>
                   <Button id="maxButton" fx:id="maxButton" mnemonicParsing="false" text="Max">
@@ -68,7 +74,7 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button id="minButton" fx:id="minButton" mnemonicParsing="false" onAction="#getMinButtonAction" text="Min" textAlignment="RIGHT">
+                  <Button id="minButton" fx:id="minButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Min" textAlignment="RIGHT">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -95,8 +101,13 @@
                   </Button>
                </children>
             </HBox>
-            <Text id="groupbyMessage" fx:id="groupbyMessage" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="399.7366886138916" />
          </children>
       </VBox>
+      <HBox prefHeight="19.0" prefWidth="400.0">
+         <children>
+            <Button id="fileChooserButton" fx:id="fileChooserButton" mnemonicParsing="false" onAction="#locateFile" text="Choose file" />
+            <Text id="chooseFileText" fx:id="chooseFileText" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="171.73669052124023" />
+         </children>
+      </HBox>
    </children>
 </GridPane>
