@@ -27,6 +27,12 @@
    <children>
       <VBox id="boxLoadFile" fx:id="boxLoadFile" prefHeight="314.0" prefWidth="400.0" GridPane.rowIndex="1">
          <children>
+            <HBox prefHeight="19.0" prefWidth="400.0">
+               <children>
+                  <Button id="fileChooserButton" fx:id="fileChooserButton" mnemonicParsing="false" onAction="#locateFile" text="Choose file" />
+                  <Text id="chooseFileText" fx:id="chooseFileText" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="171.73669052124023" />
+               </children>
+            </HBox>
             <HBox prefHeight="29.0" prefWidth="400.0">
                <children>
                   <TextField id="widthTF" fx:id="widthTF" prefHeight="26.0" prefWidth="48.0" promptText="Width" />
@@ -67,9 +73,32 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="22.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="408.0" />
                </children>
             </VBox>
-            <HBox prefHeight="29.0" prefWidth="400.0">
+         </children>
+      </VBox>
+      <VBox id="operationAndChartVBox" fx:id="operationAndChartVBox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose columns for operations:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="99.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+            <HBox prefHeight="27.0" prefWidth="400.0">
                <children>
-                  <Button id="maxButton" fx:id="maxButton" mnemonicParsing="false" text="Max">
+                  <ChoiceBox id="columsNamesOpChBox" fx:id="columsNamesOpChBox" prefHeight="26.0" prefWidth="106.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="47.0" />
+                  <Button id="chooseColumnOpButton" fx:id="chooseColumnOpButton" mnemonicParsing="false" onAction="#addColumnNameOp" text="Choose column">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <Text id="opTextMessage" fx:id="opTextMessage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+            <TextArea id="opColumnsInfo" fx:id="opColumnsInfo" prefHeight="22.0" prefWidth="400.0" text="Columns chosen: " />
+            <HBox id="operationBox" fx:id="operationBox" prefHeight="29.0" prefWidth="400.0">
+               <children>
+                  <Button id="maxButton" fx:id="maxButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Max">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -79,35 +108,78 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button id="meanButton" fx:id="meanButton" mnemonicParsing="false" text="Mean">
+                  <Button id="meanButton" fx:id="meanButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Mean">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button id="stdButton" fx:id="stdButton" mnemonicParsing="false" text="Std">
+                  <Button id="stdButton" fx:id="stdButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Std">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button id="sumButton" fx:id="sumButton" mnemonicParsing="false" text="Sum">
+                  <Button id="sumButton" fx:id="sumButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Sum">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button id="varButton" fx:id="varButton" mnemonicParsing="false" text="Var">
+                  <Button id="varButton" fx:id="varButton" mnemonicParsing="false" onAction="#getOperationButtonAction" text="Var">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
                </children>
             </HBox>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="51.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="39.0" />
+                  <VBox prefHeight="200.0" prefWidth="334.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose column for X Axis:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <HBox prefHeight="27.0" prefWidth="400.0">
+                           <children>
+                              <ChoiceBox id="xAxiSChoiceBox" prefHeight="26.0" prefWidth="106.0" fx:id="xAxiSChoiceBox" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="47.0" />
+                              <Button id="chooseXAxisButton1" fx:id="chooseYAxisButton1" mnemonicParsing="false" onAction="#addAxisX" text="Choose column">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose column for Y Axis:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <HBox prefHeight="27.0" prefWidth="400.0">
+                           <children>
+                              <ChoiceBox id="yAxiSChoiceBox" fx:id="yAxisChoiceBox" prefHeight="26.0" prefWidth="106.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="47.0" />
+                              <Button id="chooseYAxisButton1" fx:id="chooseYAxisButton1" mnemonicParsing="false" onAction="#addColumnNameOp" text="Choose column">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Text id="chartTextMessage" fx:id="chartTextMessage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+                        <TextArea id="chartAxisInfo1" fx:id="chartAxesInfo" prefHeight="22.0" prefWidth="400.0" text="Columns chosen: " />
+                        <Button id="drawLineChartButton" fx:id="drawLineChartButton" mnemonicParsing="false" onAction="#getLineChartButtonAction" prefHeight="42.0" prefWidth="182.0" text="Draw Line Chart">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
          </children>
       </VBox>
-      <HBox prefHeight="19.0" prefWidth="400.0">
-         <children>
-            <Button id="fileChooserButton" fx:id="fileChooserButton" mnemonicParsing="false" onAction="#locateFile" text="Choose file" />
-            <Text id="chooseFileText" fx:id="chooseFileText" opacity="0.4" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" wrappingWidth="171.73669052124023" />
-         </children>
-      </HBox>
    </children>
 </GridPane>

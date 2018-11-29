@@ -29,36 +29,36 @@ public class OperationController {
         this.dataFrame=dataFrame;
     }
 
-    public void setOperationLabel(String...colname){
+    public void setOperationLabel(String textOpC,String...colname){
         String text = new String("OOOOO");
         System.out.println(name);
         try{
             if (name.equals("Min")){
-                text= dataFrame.groupBy(colname).min().toString();
-                operationText.setText("Min");
+                text= dataFrame.iloc(0,200).groupBy(colname).min().toString();
+                operationText.setText("Min "+textOpC);
             }
             else if (name.equals("Max")){
                 text= dataFrame.groupBy(colname).max().toString();
-                operationText.setText("Max");
+                operationText.setText("Max "+textOpC);
             }
             else if (name.equals("Sum")){
                 text= dataFrame.groupBy(colname).sum().toString();
-                operationText.setText("Sum");
+                operationText.setText("Sum "+textOpC);
             }
             else if (name.equals("Std")){
                 text= dataFrame.groupBy(colname).std().toString();
-                operationText.setText("Std");
+                operationText.setText("Std "+textOpC);
             }
             else if (name.equals("Mean")){
                 text= dataFrame.groupBy(colname).mean().toString();
-                operationText.setText("Mean");
+                operationText.setText("Mean "+textOpC);
             }
             else if (name.equals("Var")){
                 text= dataFrame.groupBy(colname).var().toString();
-                operationText.setText("Var");
+                operationText.setText("Var "+textOpC);
             }
             //System.out.println(text);
-            operationLabel.setText(text+text+text+text);
+            operationLabel.setText(text);
         }
         catch (Exception e){
             e.printStackTrace();
