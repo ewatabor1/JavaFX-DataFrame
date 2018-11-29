@@ -16,7 +16,6 @@ public class ChartController {
     private DataFrame dataFrame;
     private Column firstColumn;
     private Column secondColumn;
-    private int limit;
 
     public void setDataFrame(DataFrame dataFrame) {
         this.dataFrame = dataFrame;
@@ -30,11 +29,9 @@ public class ChartController {
         this.secondColumn = secondColumn;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
 
     public void createChart (){
+        System.out.println(firstColumn.getName()+"\n"+secondColumn.getName());
         final CategoryAxis xAxis = new CategoryAxis();
         final CategoryAxis yAxis = new CategoryAxis();
 
@@ -44,11 +41,14 @@ public class ChartController {
         XYChart.Series series = new XYChart.Series();
         series.setName("DataFrame");
 
-        for (int i = 0; i < limit; i++) {
+        for (int i = 0; i < dataFrame.size(); i++) {
             series.getData().add(new XYChart.Data<>(firstColumn.elementAtIndex(i).toString(), secondColumn.elementAtIndex(i).toString()));
         }
 
         lineChart.getData().add(series);
         borderPane.setCenter(lineChart);
+    }
+    public DataFrame getDataFrame (){
+        return dataFrame;
     }
 }

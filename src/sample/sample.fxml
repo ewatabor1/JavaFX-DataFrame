@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -92,9 +93,21 @@
                         <Font size="13.0" />
                      </font>
                   </Button>
+                  <Button id="clearOpCNames" fx:id="clearOpCNames" mnemonicParsing="false" onAction="#clearOpCNames" prefHeight="30.0" prefWidth="68.0" text="Clear">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
                </children>
             </HBox>
-            <Text id="opTextMessage" fx:id="opTextMessage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+            <HBox prefHeight="35.0" prefWidth="400.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Limit (optional): " />
+                  <TextField id="fromOpTextField" fx:id="fromOpTextField" prefHeight="26.0" prefWidth="69.0" promptText="From" />
+                  <TextField id="toOpTextField" fx:id="toOpTextField" prefHeight="26.0" prefWidth="80.0" promptText="To" />
+               </children>
+            </HBox>
+            <Text id="opTextMessage" fx:id="opTextMessage" strokeType="OUTSIDE" strokeWidth="0.0" />
             <TextArea id="opColumnsInfo" fx:id="opColumnsInfo" prefHeight="22.0" prefWidth="400.0" text="Columns chosen: " />
             <HBox id="operationBox" fx:id="operationBox" prefHeight="29.0" prefWidth="400.0">
                <children>
@@ -130,7 +143,8 @@
                   </Button>
                </children>
             </HBox>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="51.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="25.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+            <Line endX="300.8929443359375" endY="-0.20710676908493042" startX="-100.0" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="39.0" />
@@ -161,11 +175,25 @@
                            <children>
                               <ChoiceBox id="yAxiSChoiceBox" fx:id="yAxisChoiceBox" prefHeight="26.0" prefWidth="106.0" />
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="47.0" />
-                              <Button id="chooseYAxisButton1" fx:id="chooseYAxisButton1" mnemonicParsing="false" onAction="#addColumnNameOp" text="Choose column">
+                              <Button id="chooseYAxisButton1" fx:id="chooseYAxisButton1" mnemonicParsing="false" onAction="#addAxisY" text="Choose column">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
                               </Button>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="35.0" prefWidth="400.0">
+                           <children>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="24.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="23.0" />
+                              <Button id="clearChartCNames" fx:id="clearChartCNames" mnemonicParsing="false" onAction="#clearChartCNames" prefHeight="0.0" prefWidth="54.0" text="Clear">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Button>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="29.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="68.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Limit : " />
+                              <TextField id="fromChartTextField" fx:id="fromChartTextField" prefHeight="26.0" prefWidth="49.0" promptText="From" />
+                              <TextField id="toChartTextField" fx:id="toChartTextField" prefHeight="26.0" prefWidth="57.0" promptText="To" />
                            </children>
                         </HBox>
                         <Text id="chartTextMessage" fx:id="chartTextMessage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />

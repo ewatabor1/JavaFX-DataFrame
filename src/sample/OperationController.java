@@ -34,7 +34,7 @@ public class OperationController {
         System.out.println(name);
         try{
             if (name.equals("Min")){
-                text= dataFrame.iloc(0,200).groupBy(colname).min().toString();
+                text= dataFrame.groupBy(colname).min().toString();
                 operationText.setText("Min "+textOpC);
             }
             else if (name.equals("Max")){

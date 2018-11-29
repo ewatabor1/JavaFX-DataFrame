@@ -30,6 +30,10 @@ public class Controller {
     @FXML private HBox operationBox;
     @FXML private TextField widthTF;
     @FXML private TextField addColNameTF;
+    @FXML private TextField fromOpTextField;
+    @FXML private TextField toOpTextField;
+    @FXML private TextField fromChartTextField;
+    @FXML private TextField toChartTextField;
     @FXML private TextArea colInfoText;
     @FXML private TextArea typesInfoText;
     @FXML private TextArea opColumnsInfo;
@@ -178,7 +182,6 @@ public class Controller {
         yAxisChoiceBox.setItems(columnsList);
     }
     @FXML private void addAxisX (ActionEvent event){
-        boolean flag=false;
         if (xAxiSChoiceBox.getValue()==null) {
             chartTextMessage.setText("Choose a column first!");
             chartTextMessage.setVisible(true);
@@ -190,7 +193,22 @@ public class Controller {
         }
         String temp="Axes chosen: ";
         if (axes[0]!=null) temp=temp+axes[0];
-        if (axes[1]!=null) temp=temp+axes[1];
+        if (axes[1]!=null) temp=temp+" "+axes[1];
+        chartAxesInfo.setText(temp);
+    }
+    @FXML private void addAxisY (ActionEvent event){
+        if (xAxiSChoiceBox.getValue()==null) {
+            chartTextMessage.setText("Choose a column first!");
+            chartTextMessage.setVisible(true);
+        }
+        else {
+            axes[1]=yAxisChoiceBox.getValue().toString();
+            chartTextMessage.setText("Axis y set.");
+            chartTextMessage.setVisible(true);
+        }
+        String temp="Axes chosen: ";
+        if (axes[0]!=null) temp=temp+axes[0];
+        if (axes[1]!=null) temp=temp+" "+axes[1];
         chartAxesInfo.setText(temp);
     }
     @FXML private void addColumnNameOp (ActionEvent event){
@@ -284,55 +302,118 @@ public class Controller {
             fxmlLoader.setLocation(getClass().getResource("operationWindow.fxml"));
             OperationController opController = new OperationController();
             fxmlLoader.setController(opController);
-            if (dataF!=null) opController.setDataFrame(dataF);
+            try{
+                opController.setDataFrame(dataF.iloc(0,1000));
+            }
+            catch (WrongTypeInColumn e){
+                opTextMessage.setText("Wrong type in column: \""+e.getName()+"\", indeks: "+e.getIndex());
+            }
             if (id.equals("minButton")) opController.setName("Min");
             else if(id.equals("maxButton")) opController.setName("Max");
             else if(id.equals("sumButton")) opController.setName("Sum");
             else if(id.equals("stdButton")) opController.setName("Std");
             else if(id.equals("meanButton")) opController.setName("Mean");
             else if(id.equals("varButton")) opController.setName("Var");
-
-            Stage stage = new Stage();
-            Parent root = null;
-            try {
-                root=fxmlLoader.load();
-                opController.setOperationLabel(colNameOpToString(),opColumns);
+            if (opController.dataFrame!=null){
+                Stage stage = new Stage();
+                Parent root = null;
+                try {
+                    root=fxmlLoader.load();
+                    opController.setOperationLabel(colNameOpToString(),opColumns);
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setTitle(opController.getName());
+                stage.show();
             }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle(opController.getName());
-            stage.show();
         }
         else {
             opTextMessage.setText("Choose at least one column first!");
             opTextMessage.setVisible(true);
         }
     }
+    @FXML private void clearOpCNames (ActionEvent event){
+        for (int i=0;i<width;i++){
+            opColumns[i]=null;
+        }
+        opColumnsInfo.setText("Columns chosen: ");
+        opTextMessage.setText("Columns cleared.");
+    }
+    @FXML private void clearChartCNames (ActionEvent event){
+        axes[0]=null;
+        axes[1]=null;
+        chartAxesInfo.setText("Columns chosen: ");
+        chartTextMessage.setText("Columns cleared");
+    }
+    private int[] limit (String fromS, String toS){
+        int from=0,to=0;
+        int [] temp=new int[2];
+        if (fromS!=null || toS!=null){
+            try{
+                from=Integer.valueOf(fromS);
+            }
+            catch (Exception e){
+                from=0;
+            }
+            try{
+                to=Integer.valueOf(toS);
+            }
+            catch (Exception e){
+                to=0;
+            }
+            if (from<0) from=0;
+            if (to<0) to=0;
+            if(from>dataF.size()) from=dataF.size()-1;
+            if (to>dataF.size()) to=dataF.size()-1;
+            if (from>to) to=from;
+            temp[0]=from;
+            temp[1]=to;
+        }
+        else if (fromS==null && toS==null) {
+            from=0;
+            to=dataF.size()-1;
+        }
+        return temp;
+    }
     @FXML private void getLineChartButtonAction (ActionEvent event){
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("chartWindow.fxml"));
         ChartController chartController = new ChartController();
         fxmlLoader.setController(chartController);
-        chartController.setDataFrame(dataF);
-        chartController.setFirstColumn(dataF.get(0));
-        chartController.setSecondColumn(dataF.get(1));
-        chartController.setLimit(200);
-        Stage stage = new Stage();
-        Parent root = null;
-        try {
-            root=fxmlLoader.load();
-            chartController.createChart();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Chart");
-        stage.show();
+        int limit[] = limit(fromChartTextField.getText(),toChartTextField.getText());
+            int a=0,b=0;
+            for (;a<width;a++){
+                if(dataF.get(a).getName().equals(axes[0])) break;
+            }
+            for (;b<width;b++){
+                if(dataF.get(b).getName().equals(axes[1])) break;
+            }
+            try {
+                System.out.println(limit[0]+limit[1]);
+                chartController.setDataFrame(dataF.iloc(limit[0], limit[1]));
+                chartController.setFirstColumn(dataF.iloc(limit[0], limit[1]).get(a));
+                chartController.setSecondColumn(dataF.iloc(limit[0], limit[1]).get(b));
+            }
+            catch (WrongTypeInColumn e){
+                chartTextMessage.setText("Wrong type in column: \""+e.getName()+"\", indeks: "+e.getIndex());
+            }
+            Stage stage = new Stage();
+            Parent root = null;
+            try {
+                root=fxmlLoader.load();
+                chartController.createChart();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Chart");
+            stage.show();
+
     }
 
 
